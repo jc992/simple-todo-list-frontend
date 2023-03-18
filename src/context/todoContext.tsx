@@ -1,17 +1,26 @@
 import React, { createContext, FC } from 'react';
 import { TodoContextType, ITodo, TodoProps } from '../@types/todo';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export const TodoContext = createContext<TodoContextType | null>(null);
 
 const TodoProvider: FC<TodoProps> = ({ children }) => {
-  const [todos, setTodos] = React.useState<ITodo[]>([
-    {
-      id: crypto.randomUUID(),
-      description: 'Learn Javascript',
-      timestamp: new Date().getTime(),
-      isComplete: false,
-    },
-  ]);
+  const [localState, setLocalState] = useLocalStorage('todos');
+  const [todos, setTodos] = React.useState<ITodo[]>(
+    localState ?? [
+      {
+        id: crypto.randomUUID(),
+        description: 'Learn Javascript',
+        timestamp: new Date().getTime(),
+        isComplete: false,
+      },
+    ],
+  );
+
+  const saveState = (args: ITodo[]): void => {
+    setTodos(args);
+    setLocalState(args);
+  };
 
   const saveTodo = (todo: ITodo): void => {
     const newTodo: ITodo = {
@@ -20,7 +29,7 @@ const TodoProvider: FC<TodoProps> = ({ children }) => {
       timestamp: new Date().getTime(),
       isComplete: false,
     };
-    setTodos([...todos, newTodo]);
+    saveState([...todos, newTodo]);
   };
 
   const updateTodo = (id: string): void => {
@@ -28,7 +37,7 @@ const TodoProvider: FC<TodoProps> = ({ children }) => {
     todos.filter((todo: ITodo) => {
       if (todo.id === id) {
         todo.isComplete = !todo.isComplete;
-        setTodos([...todos]);
+        saveState([...todos]);
       }
     });
   };
@@ -39,7 +48,7 @@ const TodoProvider: FC<TodoProps> = ({ children }) => {
       return;
     }
     todos.splice(todos.indexOf(item), 1);
-    setTodos([...todos]);
+    saveState([...todos]);
   };
 
   const editTodo = (id: string, description: string): void => {
@@ -47,7 +56,7 @@ const TodoProvider: FC<TodoProps> = ({ children }) => {
     todos.filter((todo: ITodo) => {
       if (todo.id === id) {
         todo.description = description;
-        setTodos([...todos]);
+        saveState([...todos]);
       }
     });
   };
