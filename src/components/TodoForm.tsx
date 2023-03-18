@@ -1,6 +1,7 @@
 import React, { FC, FormEvent } from 'react';
 import { TodoContext } from '../context/todoContext';
 import { TodoContextType, ITodo } from '../@types/todo';
+import './TodoForm.styles.css';
 
 const TodoForm: FC = () => {
   const { saveTodo } = React.useContext(TodoContext) as TodoContextType;
