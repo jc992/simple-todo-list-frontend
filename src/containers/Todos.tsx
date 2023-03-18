@@ -3,6 +3,7 @@ import { TodoContextType, ITodo, SortBy } from '../@types/todo';
 import { TodoContext } from '../context/todoContext';
 import TodoItem from '../components/TodoItem';
 import Divider from '../components/Divider';
+import './Todos.styles.css';
 
 const Todos: FC = () => {
   const [sortBy, setSortBy] = useState<SortBy>('asc');

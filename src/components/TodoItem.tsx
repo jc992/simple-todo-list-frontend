@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { TodoItemProps } from '../@types/todo';
+import './TodoItem.styles.css';
 
 const TodoItem: FC<TodoItemProps> = ({ todo, updateTodo, deleteTodo, editTodo }) => {
   const [isEditing, setEditing] = useState(false);
@@ -16,21 +17,27 @@ const TodoItem: FC<TodoItemProps> = ({ todo, updateTodo, deleteTodo, editTodo })
   };
 
   return (
-    <div className="item-container" style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div className="item-container">
       <div className="inner-wrapper">
-        <div className="checkbox-container">
-          {!isEditing ? (
+        {!isEditing ? (
+          <div className="checkbox-container">
             <input
               className="checkbox"
               type="checkbox"
               checked={todo.isComplete}
               onChange={() => updateTodo(todo.id)}
             />
-          ) : null}
-        </div>
+          </div>
+        ) : null}
         <div className="text-container">
           {isEditing ? (
-            <input value={description} onChange={(e) => setDescription(e.target.value)}></input>
+            <div className="input-inner-wrapper">
+              <input
+                className="edit-input"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              ></input>
+            </div>
           ) : (
             <h1>{todo.description}</h1>
           )}
